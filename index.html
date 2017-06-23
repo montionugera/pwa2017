@@ -16,8 +16,32 @@
       margin: 0;
     }
   </style>
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="bower_components/web-animations-js/web-animations.min.js"></script>
+  <link rel="import" href="bower_components/platinum-sw/platinum-sw-elements.html">
+  <link rel="import" href="bower_components/polymerfire/firebase-app.html">
+  <link rel="import" href="catz-app.html">
 </head>
 <body>
- Hello Firebase
+Hello Firebase
+<platinum-sw-register
+  auto-register
+  skip-waiting
+  clients-claim
+  reload-on-install
+  href="sw-import.js">
+  <platinum-sw-cache
+    default-cache-strategy="networkFirst">
+  </platinum-sw-cache>
+</platinum-sw-register>
+<firebase-app
+    name="catz"
+    api-key="AIzaSyD_VynmXjIVtuRW0SsgyTQUviH5D24SM1A"
+    auth-domain="pwa2017-c3363.firebaseapp.com"
+    database-url="https://pwa2017-c3363.firebaseio.com"
+    messaging-sender-id="310486971481"
+    storage-bucket="pwa2017-c3363.appspot.com"
+    >
+</firebase-app>
 </body>
 </html>
