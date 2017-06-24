@@ -15,7 +15,7 @@
     <style>
     app-header {
       color: #fff;
-      background-color: #00AA8D;
+      background-color: deepskyblue;
     }
     app-toolbar {
       height: 120px;
@@ -26,7 +26,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background-image: url('//app-layout-assets.appspot.com/assets/pesto/logo_m.png');
+      background-image: url('images/logo@0.75x.png');
       background-repeat: no-repeat;
       background-position: center center;
       background-size: 90px;
@@ -39,7 +39,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background-image: url('//app-layout-assets.appspot.com/assets/pesto/logo_l.png');
+      background-image: url('images/logo.png');
       background-repeat: no-repeat;
       background-position: center center;
       background-size: 240px;
@@ -95,12 +95,12 @@
         height: 60px;
       }
       [condensed-title] {
-        background-image: url('//app-layout-assets.appspot.com/assets/pesto/logo_s.png');
+        background-image: url('images/logo@0.5x.png');
         background-size: 60px;
       }
       [main-title] {
         top: -60px;
-        background-image: url('//app-layout-assets.appspot.com/assets/pesto/logo_m.png');
+        background-image: url('images/logo@0.75x.png');
         background-size: 90px;
       }
       .content {
@@ -124,7 +124,6 @@
           <div main-title></div>
         </app-toolbar>
       </app-header>
-
       <div class="content">
         <template is="dom-repeat" items="{{recipes}}"><!-- No empty text node
         --><a href="#/detail/{{item.id}}" class="card-container">

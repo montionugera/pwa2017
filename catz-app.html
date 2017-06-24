@@ -90,7 +90,6 @@
         route="{{_subRoute}}"
         pattern="/:id"
         data="{{_idData}}"></app-route>
-
     <app-drawer-layout responsive-width="1280px">
 
       <!-- nav panel -->
@@ -132,26 +131,26 @@
       <!-- list/detail pages -->
       <iron-pages selected="[[_selectedPage]]" attr-for-selected="name">
 
-        <recipe-list name="home" recipes="[[recipes]]">
+        <catz-list name="home" recipes="[[recipes]]">
           <paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>
-        </recipe-list>
+        </catz-list>
 
-        <recipe-list name="favorites">
+        <catz-list name="favorites">
           <paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>
-        </recipe-list>
+        </catz-list>
 
-        <recipe-list name="saved">
+        <catz-list name="saved">
           <paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>
-        </recipe-list>
+        </catz-list>
 
-        <recipe-list name="trending">
+        <catz-list name="trending">
           <paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>
-        </recipe-list>
+        </catz-list>
 
-        <recipe-detail
+        <catz-detail
             id="detailView"
             name="detail"
-            recipe="[[_getRecipe(recipes, _idData.id)]]"></recipe-detail>
+            recipe="[[_getRecipe(recipes, _idData.id)]]"></catz-detail>
 
       </iron-pages>
 
