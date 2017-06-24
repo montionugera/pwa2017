@@ -1,0 +1,38 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/paper-styles/color.html">
+<link rel="import" href="bower_components/font-roboto/roboto.html">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,700">
+<link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="stylesheet" href="css/main.css">
+<dom-module id="catz-app-shared-styles">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: #e8e8e8;
+        height: 100vh;
+        @apply --paper-font-common-base;
+
+        --paper-fab-background: var(--paper-teal-500);
+      }
+
+      na-note {
+        margin-bottom: 1em;
+      }
+
+      paper-fab {
+        position: absolute;
+        bottom: 1em;
+        right: 1em;
+      }
+
+      @media (min-width: 640px) {
+        na-note {
+          max-width: 320px;
+          margin: 0 0.5em 1em;
+        }
+
+      }
+    </style>
+  </template>
+</dom-module>
