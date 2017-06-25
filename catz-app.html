@@ -17,6 +17,7 @@
 <link rel="import" href="bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="bower_components/app-storage/app-network-status-behavior.html">
 
 <link rel="import" href="catz-detail.html">
 <link rel="import" href="catz-list.html">
@@ -105,6 +106,12 @@
       signed-in="[[signedIn]]"
       disabled="[[!online]]">
     </catz-login>
+
+    <catz-editor
+      id="editor"
+      post="{{editablePost}}"
+      on-close="commitChange">
+    </catz-editor>
     <firebase-auth
       id="auth"
       app-name="catz"
@@ -113,6 +120,13 @@
       user="{{user}}">
 
     </firebase-auth>
+
+    <firebase-document
+      id="document"
+      app-name="notes"
+      path="[[editablePostId]]"
+      data="{{editablePost}}">
+    </firebase-document>
     <app-drawer-layout responsive-width="1280px">
 
       <!-- nav panel -->
@@ -159,22 +173,27 @@
       <iron-pages selected="[[_selectedPage]]" attr-for-selected="name">
 
         <catz-list name="home" recipes="[[recipes]]"
-                   signed-in="[[signedIn]]">
+                   signed-in="[[signedIn]]"
+                   online="[[online]]"
+                   on-create="create">
           <paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>
         </catz-list>
 
         <catz-list name="favorites"
-                   signed-in="[[signedIn]]">
+                   signed-in="[[signedIn]]"
+                   online="[[online]]">
           <paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>
         </catz-list>
 
         <catz-list name="saved"
-                   signed-in="[[signedIn]]">
+                   signed-in="[[signedIn]]"
+                   online="[[online]]">
           <paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>
         </catz-list>
 
         <catz-list name="trending"
-                   signed-in="[[signedIn]]">
+                   signed-in="[[signedIn]]"
+                   online="[[online]]">
           <paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>
         </catz-list>
 
@@ -192,6 +211,7 @@
   <script>
       Polymer({
           is: 'catz-app',
+          behaviors: [Polymer.AppNetworkStatusBehavior],
           properties: {
               recipes: Object,
               _route: Object,
@@ -201,8 +221,7 @@
                   observer: '_pageDataChanged'
               },
               user: {
-                  type: Object,
-                  observer: '_userChanged'
+                  type: Object
               },
               _selectedPage: String,
               _idData: Object,
@@ -252,9 +271,6 @@
                   Polymer.AppLayout.scroll({top: 0, behavior: 'silent'});
               }
           },
-          _userChanged: function (user, oldUser) {
-              console.log(user);
-          },
           signIn: function () {
               this.$.auth.signInWithPopup();
           },
@@ -262,6 +278,25 @@
           logout: function () {
               this.$.auth.signOut();
           },
+
+          get isEditable() {
+              console.log(this.online);
+              return this.online;
+          },
+          get postPath() {
+              return '/notes/' + this.user.uid;
+          },
+
+          toEditableId: function (postId) {
+              return this.postPath + '/' + noteId;
+          },
+          create: function () {
+              if (this.isEditable) {
+                  this.editablePostId = null;
+                  console.log("create!!");
+                  this.$.editor.open();
+              }
+          }
       });
   </script>
 
