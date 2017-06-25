@@ -110,6 +110,7 @@
     <catz-editor
       id="editor"
       post="{{editablePost}}"
+      user="[[user]]"
       on-close="commitChange">
     </catz-editor>
     <firebase-auth
@@ -123,7 +124,7 @@
 
     <firebase-document
       id="document"
-      app-name="notes"
+      app-name="catz"
       path="[[editablePostId]]"
       data="{{editablePost}}">
     </firebase-document>

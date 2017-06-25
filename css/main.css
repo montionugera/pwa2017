@@ -1,3 +1,16 @@
 .demo{
     color: green;
 }
+
+#image-form #submitImage {
+  width: auto;
+  padding: 0 6px 0 1px;
+  min-width: 0;
+}
+#image-form #submitImage .material-icons {
+  top: -1px;
+}
+
+#mediaCapture {
+  display: none;
+}

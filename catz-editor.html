@@ -85,117 +85,120 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
     <div id="background"></div>
-    <catz-cat id="post" title="{{cat.title}}" body="{{cat.body}}" editable></catz-cat>
+    <catz-cat id="post" title="{{cat.title}}" body="{{cat.body}}"
+
+              user="[[user]]"
+              editable></catz-cat>
     <div class="controls">
       <paper-button on-tap="delete">Delete</paper-button>
       <paper-button on-tap="save">Done</paper-button>
     </div>
   </template>
   <script>
-    Polymer({
-      is: 'catz-editor',
+      Polymer({
+          is: 'catz-editor',
 
-      properties: {
-        post: {
-          type: Object,
-          notify: true
-        },
+          properties: {
+              post: {
+                  type: Object,
+                  notify: true
+              },
 
-        opened: {
-          type: Boolean,
-          reflectToAttribute: true,
-          readOnly: true,
-          value: false
-        },
-      },
+              opened: {
+                  type: Boolean,
+                  reflectToAttribute: true,
+                  readOnly: true,
+                  value: false
+              }
+          },
 
-      open: function(element) {
-        this._setOpened(true);
-        this.__editedElement = element;
-        if (element) {
-          element.style.opacity = 0;
-          this.transitionInFrom(element.getBoundingClientRect());
-        } else {
-          this.create();
-        }
-      },
+          open: function (element) {
+              this._setOpened(true);
+              this.__editedElement = element;
+              if (element) {
+                  element.style.opacity = 0;
+                  this.transitionInFrom(element.getBoundingClientRect());
+              } else {
+                  this.create();
+              }
+          },
 
-      create: function() {
-        this._setOpened(true);
-        this.post = { title: '', body: '' };
-        this.transitionInFrom(this.getBoundingClientRect());
-      },
+          create: function () {
+              this._setOpened(true);
+              this.post = {title: '', body: ''};
+              this.transitionInFrom(this.getBoundingClientRect());
+          },
 
-      save: function() {
-        this.close('save');
-      },
+          save: function () {
+              this.close('save');
+          },
 
-      delete: function() {
-        this.close('delete');
-      },
+          delete: function () {
+              this.close('delete');
+          },
 
-      close: function(detail) {
-        if (this.__editedElement) {
-          this.__editedElement.style.opacity = 1;
-          this.__editedElement = null;
-        }
+          close: function (detail) {
+              if (this.__editedElement) {
+                  this.__editedElement.style.opacity = 1;
+                  this.__editedElement = null;
+              }
 
-        this.fire('close', detail, { bubbles: false });
-        this.transitionOut().then(function() {
-          Polymer.dom(this).classList.remove('open');
-          this._setOpened(false);
-        }.bind(this));
-      },
+              this.fire('close', detail, {bubbles: false});
+              this.transitionOut().then(function () {
+                  Polymer.dom(this).classList.remove('open');
+                  this._setOpened(false);
+              }.bind(this));
+          },
 
-      transitionInFrom: function(rect) {
-        var targetRect = this.getBoundingClientRect();
-          console.log("transition .. ",targetRect);
-        var targetLeft = targetRect.width > 500 ?
-            targetRect.width / 2 - 240 : 10;
-        var targetWidth = targetRect.width > 500 ?
-            '480px' : 'calc(100vw - 20px)';
-        var postAnimation = this.$.post.animate([{
-          transform: `translate(${rect.left}px,${rect.top - 46}px)`,
-          width: `${rect.width}px`,
-          easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
-        }, {
-          transform: `translate(${targetLeft}px, 0px)`,
-          width: targetWidth
-        }], 500);
+          transitionInFrom: function (rect) {
+              var targetRect = this.getBoundingClientRect();
+              console.log("transition .. ", targetRect);
+              var targetLeft = targetRect.width > 500 ?
+                  targetRect.width / 2 - 240 : 10;
+              var targetWidth = targetRect.width > 500 ?
+                  '480px' : 'calc(100vw - 20px)';
+              var postAnimation = this.$.post.animate([{
+                  transform: `translate(${rect.left}px,${rect.top - 46}px)`,
+                  width: `${rect.width}px`,
+                  easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+              }, {
+                  transform: `translate(${targetLeft}px, 0px)`,
+                  width: targetWidth
+              }], 500);
 
-        var backgroundAnimation = this.$.background.animate([{
-          transform: `translate(${rect.left + rect.width / 2 - 128}px, ${rect.top - 46 + rect.height / 2 - 128}px) scale(0.1)`,
-          easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
-        }, {
-          transform: `scale(${targetRect.width / 256 * 4})`
-        }], 800);
+              var backgroundAnimation = this.$.background.animate([{
+                  transform: `translate(${rect.left + rect.width / 2 - 128}px, ${rect.top - 46 + rect.height / 2 - 128}px) scale(0.1)`,
+                  easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+              }, {
+                  transform: `scale(${targetRect.width / 256 * 4})`
+              }], 800);
 
-        postAnimation.addEventListener('finish', function() {
-          Polymer.dom(this).classList.add('open');
-        }.bind(this));
-      },
+              postAnimation.addEventListener('finish', function () {
+                  Polymer.dom(this).classList.add('open');
+              }.bind(this));
+          },
 
-      transitionOut: function() {
-        var animation = this.animate([{
-          opacity: 1,
-          easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
-        }, {
-          opacity: 0
-        }], 300);
+          transitionOut: function () {
+              var animation = this.animate([{
+                  opacity: 1,
+                  easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+              }, {
+                  opacity: 0
+              }], 300);
 
-        this.$.post.animate([{
-          transform: 'translateY(0) scale(1)',
-          opacity: 1,
-          easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
-        }, {
-          transform: 'translateY(10px) scale(0.9)',
-          opacity: 0
-        }], 500);
+              this.$.post.animate([{
+                  transform: 'translateY(0) scale(1)',
+                  opacity: 1,
+                  easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+              }, {
+                  transform: 'translateY(10px) scale(0.9)',
+                  opacity: 0
+              }], 500);
 
-        return new Promise(function(resolve) {
-          animation.addEventListener('finish', resolve);
-        }.bind(this));
-      }
-    });
+              return new Promise(function (resolve) {
+                  animation.addEventListener('finish', resolve);
+              }.bind(this));
+          }
+      });
   </script>
 </dom-module>

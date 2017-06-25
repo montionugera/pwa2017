@@ -12,10 +12,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="bower_components/paper-styles/shadow.html">
 <link rel="import" href="bower_components/paper-styles/typography.html">
 <link rel="import" href="bower_components/iron-input/iron-input.html">
+<link rel="import" href="bower_components/polymerfire/polymerfire.html">
 <link rel="import" href="bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html">
 
 <dom-module id="catz-cat">
   <template>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-light_blue.min.css"/>
+    <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+    <link rel="stylesheet" href="css/main.css">
     <style>
       :host {
         display: block;
@@ -33,7 +39,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           font-family: 'Roboto Slab', Times New Roman, serif;
           white-space: pre-wrap;
         }
-
 
       }
 
@@ -58,7 +63,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         white-space: pre-wrap;
       }
 
-      h1:not(.hidden)+p {
+      h1:not(.hidden) + p {
         margin-top: 1em;
       }
 
@@ -100,63 +105,134 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #212121;
       }
     </style>
-    <template is="dom-if" if="[[editable]]">
-      <iron-input bind-value="{{title}}">
-        <input is="iron-input"
-            bind-value="{{title}}">
-        </input>
-      </iron-input>
-      <iron-autogrow-textarea
-          bind-value="{{body}}">
-      </iron-autogrow-textarea>
-    </template>
-    <template is="dom-if" if="[[!editable]]">
-      <h1 class$="[[emptyClass(title)]]">[[title]]</h1>
-      <p class$="[[emptyClass(body)]]">[[body]]</p>
-    </template>
+    <iron-input bind-value="{{title}}">
+      <input is="iron-input"
+             bind-value="{{title}}" placeholder="Catz caption">
+      </input>
+    </iron-input>
+    <iron-autogrow-textarea
+      bind-value="{{body}}" placeholder="Catz detail">
+    </iron-autogrow-textarea>
+
+    <img src="[[imgSrc]]" style="max-width: 100%">
+    <input id="mediaCapture" type="file" accept="image/*,capture=camera"
+           on-change="mediaChange">
+    <button id="submitImage" title="Add an image"
+            class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--amber-400 mdl-color-text--white"
+            on-tap="mediaClick">
+      <i class="material-icons">image</i>
+    </button>
 
   </template>
   <script>
-    Polymer({
-      is: 'catz-cat',
+      Polymer({
+          is: 'catz-cat',
 
-      properties: {
-        editable: {
-          type: Boolean,
-          reflectToAttribute: true,
-          value: false
-        },
+          properties: {
+              editable: {
+                  type: Boolean,
+                  reflectToAttribute: true,
+                  value: false
+              },
+              user: {
+                  type: Object,
+              },
 
-        title: {
-          type: String,
-          notify: true,
-          value: ''
-        },
+              title: {
+                  type: String,
+                  notify: true,
+                  value: ''
+              },
 
-        body: {
-          type: String,
-          notify: true,
-          value: ''
-        },
+              body: {
+                  type: String,
+                  notify: true,
+                  value: ''
+              },
 
-        lastUpdated: {
-          type: Number,
-          value: 0
-        }
-      },
+              imgSrc: {
+                  type: String,
+                  notify: true,
+                  value: ''
+              },
 
-      emptyClass: function(content) {
-        return !content ? 'hidden' : '';
-      },
+              lastUpdated: {
+                  type: Number,
+                  value: 0
+              },
+              directory: {
+                  type: String,
+                  value: 'img/'
+              },
+              storedName: {
+                  type: String,
+                  value: ''
+              },
+              fileType: {
+                  type: String,
+                  value: 'image/*'
+              }
+          },
 
-      propertiesAreEmpty: function() {
-        for (var i = 0; i < arguments.length; ++i) {
-          if (arguments[i]) {
-            return false;
+          emptyClass: function (content) {
+              return !content ? 'hidden' : '';
+          },
+
+          propertiesAreEmpty: function () {
+              for (var i = 0; i < arguments.length; ++i) {
+                  if (arguments[i]) {
+                      return false;
+                  }
+              }
+              return true;
+          },
+          mediaClick: function (event) {
+              console.log("media Click");
+              this.$.mediaCapture.click();
+          },
+          mediaChange: function (event) {
+              console.log("media Change");
+              event.preventDefault();
+              var file = event.target.files[0];
+
+              // Check if the file is an image.
+              if (!file.type.match('image.*')) {
+                  var data = {
+                      message: 'You can only share images',
+                      timeout: 2000
+                  };
+                  alert(data.message);
+                  return;
+              }
+
+              // Check if the user is signed-in
+              var currentUser = this.user;
+              // set Loaing
+              this.imgSrc = 'https://www.google.com/images/spin-32.gif';
+              this.database = firebase.app('catz').database();
+              this.storage = firebase.app('catz').storage();
+              this.postsRef = this.database.ref('posts');
+
+              var filePath = currentUser.uid + '/' + file.name;
+              this.storage.ref(filePath).put(file).then(function (snapshot) {
+
+                  // Get the file's Storage URI and update the chat message placeholder.
+                  var fullPath = snapshot.metadata.fullPath;
+                  var imageUri = this.storage.ref(fullPath).toString();
+                  if (imageUri.startsWith('gs://')) {
+                      this.imgSrc = 'https://www.google.com/images/spin-32.gif'; // Display a loading image first.
+                      this.storage.refFromURL(imageUri).getMetadata().then(function (metadata) {
+                          this.imgSrc  = metadata.downloadURLs[0];
+                          console.log(" setImageUrl - metadata.downloadURLs", metadata);
+                          console.log(metadata);
+                          console.log(" setImageUrl - metadata.downloadURLs[0]", metadata.downloadURLs[0]);
+                      }.bind(this));
+                  } else {
+                      this.imgSrc  = imageUri;
+                  }
+              }.bind(this));
+
           }
-        }
-        return true;
-      }
-    })
+      })
   </script>
 </dom-module>
