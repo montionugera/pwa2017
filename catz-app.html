@@ -128,6 +128,14 @@
       path="[[editablePostId]]"
       data="{{editablePost}}">
     </firebase-document>
+
+    <firebase-query
+      id="query"
+      app-name="catz"
+      path="[[myPostPath]]"
+      data="{{posts}}">
+    </firebase-query>
+
     <app-drawer-layout responsive-width="1280px">
 
       <!-- nav panel -->
@@ -138,9 +146,10 @@
             <div class="avatar-container">
               <div class="image" style$="background-image: url('[[user.photoURL]]')"></div>
             </div>
-            <div class="contact-info">
-              <div class="name">[[user.displayName]]</div>
-              <div class="email">[[user.email]]</div>
+            <div class="contact-info" style="min-height: 100px;">
+              <div class="name"> [[user.displayName]]</div>
+              <div class="email"> [[user.email]]</div>
+
             </div>
           </app-header>
 
@@ -173,11 +182,14 @@
       <!-- list/detail pages -->
       <iron-pages selected="[[_selectedPage]]" attr-for-selected="name">
 
-        <catz-list name="home" recipes="[[recipes]]"
+        <catz-list name="home"
+                   user="[[user]]"
+                   posts="[[posts]]"
                    signed-in="[[signedIn]]"
                    online="[[online]]"
                    on-create="create">
           <paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>
+
         </catz-list>
 
         <catz-list name="favorites"
@@ -229,6 +241,10 @@
                   type: Object
               },
               _selectedPage: String,
+              myPostPath: {
+                  type: String,
+                  computed: "cmpPostsPath(user)"
+              },
               _idData: Object,
 
               _scrollPositionMap: {
@@ -291,12 +307,9 @@
               console.log(this.online);
               return this.online;
           },
-          get postPath() {
-              return '/notes/' + this.user.uid;
-          },
 
           toEditableId: function (postId) {
-              return this.postPath + '/' + noteId;
+              return this.myPostPath + '/' + noteId;
           },
           create: function () {
               if (this.isEditable) {
@@ -327,8 +340,11 @@
               }
           },
 
-          get postsPath() {
-              return '/posts/' + this.user.uid;
+          cmpPostsPath: function (user) {
+              if (!user) {
+                  return ''
+              }
+              return '/posts/' + user.uid;
           },
           save: function () {
               console.log("save");
@@ -336,7 +352,9 @@
               if (this.$.document.isNew &&
                   (this.editablePost.title &&
                   this.editablePost.imgSrc)) {
-                  return this.$.document.saveValue(this.postsPath).then(function () {
+                  var user = this.user;
+                  this.editablePost.author = {uid:user.uid ,name:user.displayName,photoUrl:user.photoURL};
+                  return this.$.document.saveValue(this.myPostPath).then(function () {
                       this.$.document.reset();
                   }.bind(this));
               }

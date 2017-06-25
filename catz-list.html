@@ -69,7 +69,7 @@
         display: block;
         margin: 5px;
         --paper-card-header-image: {
-          height: 200px;
+          height: auto;
         }
       }
 
@@ -124,10 +124,27 @@
         .card-container {
           width: 100%;
         }
+
+        .avatar-container {
+          display: inline-block;
+          border: 2px solid cornflowerblue;
+          border-radius: 50%;
+          height: 24px;
+          padding: 2px;
+          width: 24px;
+          margin: 5px auto;
+        }
+
+        .avatar-container .image {
+          background-image: url('images/avartar.jpg');
+          background-size: contain;
+          border-radius: 50%;
+        }
       }
     </style>
 
     <!-- main panel -->
+
 
     <app-header-layout>
 
@@ -137,22 +154,25 @@
           <div condensed-title></div>
         </app-toolbar>
         <app-toolbar class="bottom-toolbar">
-          <div main-title></div>
+          <div main-title>
+          </div>
         </app-toolbar>
       </app-header>
 
+
       <div class="content">
 
-        <template is="dom-repeat" items="{{posts}}">
+        <template is="dom-repeat" items="[[posts]]" as="post">
           <!-- No empty text node-->
-          <a href="#/detail/{{item.id}}" class="card-container">
-            <paper-card image="{{item.imageUrl}}">
-              <div class="card-content">
-                <h2>{{item.name}}</h2>
-                <p>By <span>{{item.author}}</span></p>
-              </div>
-            </paper-card>
-          </a>
+
+          <paper-card image="{{post.imgSrc}}"
+                      id$="[[post.$key]]">
+            <div class="card-content">
+              <h2>{{post.title}}</h2>
+              <p>By
+              <span>{{post.author.name}}</span></p>
+            </div>
+          </paper-card>
           <!-- No empty text node-->
         </template>
       </div>
@@ -170,11 +190,9 @@
   <script>
       Polymer({
           is: 'catz-list',
-          properties: {
-              posts: Object
-          },
+          properties: {},
           create: function () {
-            this.fire('create');
+              this.fire('create');
           }
       });
   </script>
