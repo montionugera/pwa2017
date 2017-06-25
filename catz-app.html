@@ -162,15 +162,15 @@
             <paper-item name="home">
               <a href="#/home" name="name">Home</a>
             </paper-item>
-            <paper-item name="favorites">
-              <a href="#/favorites" name="name">Favorites</a>
-            </paper-item>
-            <paper-item name="saved">
-              <a href="#/saved" name="name">Saved</a>
-            </paper-item>
-            <paper-item name="trending">
-              <a href="#/trending" name="name">Trending</a>
-            </paper-item>
+            <!--<paper-item name="favorites">-->
+              <!--<a href="#/favorites" name="name">Favorites</a>-->
+            <!--</paper-item>-->
+            <!--<paper-item name="saved">-->
+              <!--<a href="#/saved" name="name">Saved</a>-->
+            <!--</paper-item>-->
+            <!--<paper-item name="trending">-->
+              <!--<a href="#/trending" name="name">Trending</a>-->
+            <!--</paper-item>-->
             <paper-item name="logout">
               <a name="name" on-tap="logout">Logout</a>
             </paper-item>
@@ -192,23 +192,23 @@
 
         </catz-list>
 
-        <catz-list name="favorites"
-                   signed-in="[[signedIn]]"
-                   online="[[online]]">
-          <paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>
-        </catz-list>
+        <!--<catz-list name="favorites"-->
+                   <!--signed-in="[[signedIn]]"-->
+                   <!--online="[[online]]">-->
+          <!--<paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>-->
+        <!--</catz-list>-->
 
-        <catz-list name="saved"
-                   signed-in="[[signedIn]]"
-                   online="[[online]]">
-          <paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>
-        </catz-list>
+        <!--<catz-list name="saved"-->
+                   <!--signed-in="[[signedIn]]"-->
+                   <!--online="[[online]]">-->
+          <!--<paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>-->
+        <!--</catz-list>-->
 
-        <catz-list name="trending"
-                   signed-in="[[signedIn]]"
-                   online="[[online]]">
-          <paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>
-        </catz-list>
+        <!--<catz-list name="trending"-->
+                   <!--signed-in="[[signedIn]]"-->
+                   <!--online="[[online]]">-->
+          <!--<paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>-->
+        <!--</catz-list>-->
 
         <catz-detail
           id="detailView"
@@ -312,6 +312,7 @@
               return this.myPostPath + '/' + noteId;
           },
           create: function () {
+              console.log("app try to create");
               if (this.isEditable) {
                   this.editablePostId = null;
                   this.$.editor.open();
