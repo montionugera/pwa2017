@@ -221,6 +221,10 @@
                   type: Object,
                   observer: '_pageDataChanged'
               },
+              editablePost: {
+                  type: Object,
+                  observer: '_postDataChanged'
+              },
               user: {
                   type: Object
               },
@@ -272,6 +276,9 @@
                   Polymer.AppLayout.scroll({top: 0, behavior: 'silent'});
               }
           },
+          _postDataChanged: function (postData, oldpostData) {
+              console.log(postData);
+          },
           signIn: function () {
               this.$.auth.signInWithPopup();
           },
@@ -294,10 +301,56 @@
           create: function () {
               if (this.isEditable) {
                   this.editablePostId = null;
-                  console.log("create!!");
                   this.$.editor.open();
               }
-          }
+          },
+
+          commitChange: function (event) {
+              var changeCommits;
+
+              switch (event.detail) {
+                  case 'save':
+                      changeCommits = this.save();
+                      break;
+                  case 'delete':
+                      changeCommits = this.delete();
+                      break;
+                  default:
+                      changeCommits = Promise.resolve();
+                      break;
+              }
+
+              if (this.$.query && this.$.query.refresh) {
+                  changeCommits.then(function () {
+                      this.$.query.refresh();
+                  }.bind(this));
+              }
+          },
+
+          get postsPath() {
+              return '/posts/' + this.user.uid;
+          },
+          save: function () {
+              console.log("save");
+              this.editablePost = this.$.editor.editablePost;
+              if (this.$.document.isNew &&
+                  (this.editablePost.title &&
+                  this.editablePost.imgSrc)) {
+                  return this.$.document.saveValue(this.postsPath).then(function () {
+                      this.$.document.reset();
+                  }.bind(this));
+              }
+
+              return Promise.resolve();
+          },
+
+          delete: function () {
+              if (!this.$.document.isNew) {
+                  this.$.document.destroy();
+              }
+
+              return Promise.resolve();
+          },
       });
   </script>
 

@@ -110,11 +110,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
              bind-value="{{title}}" placeholder="Catz caption">
       </input>
     </iron-input>
-    <iron-autogrow-textarea
-      bind-value="{{body}}" placeholder="Catz detail">
-    </iron-autogrow-textarea>
-
-    <img src="[[imgSrc]]" style="max-width: 100%">
+    <!--<iron-autogrow-textarea-->
+    <!--bind-value="{{body}}" placeholder="Catz detail">-->
+    <!--</iron-autogrow-textarea>-->
+    <p style="align-content: center">
+      <img src="[[imgSrc]]" style="max-width: 100%">
+    </p>
     <input id="mediaCapture" type="file" accept="image/*,capture=camera"
            on-change="mediaChange">
     <button id="submitImage" title="Add an image"
@@ -139,12 +140,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               },
 
               title: {
-                  type: String,
-                  notify: true,
-                  value: ''
-              },
-
-              body: {
                   type: String,
                   notify: true,
                   value: ''
@@ -222,13 +217,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   if (imageUri.startsWith('gs://')) {
                       this.imgSrc = 'https://www.google.com/images/spin-32.gif'; // Display a loading image first.
                       this.storage.refFromURL(imageUri).getMetadata().then(function (metadata) {
-                          this.imgSrc  = metadata.downloadURLs[0];
-                          console.log(" setImageUrl - metadata.downloadURLs", metadata);
-                          console.log(metadata);
+                          this.imgSrc = metadata.downloadURLs[0];
                           console.log(" setImageUrl - metadata.downloadURLs[0]", metadata.downloadURLs[0]);
                       }.bind(this));
                   } else {
-                      this.imgSrc  = imageUri;
+                      this.imgSrc = imageUri;
                   }
               }.bind(this));
 

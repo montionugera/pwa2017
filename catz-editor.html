@@ -85,8 +85,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
     <div id="background"></div>
-    <catz-cat id="post" title="{{cat.title}}" body="{{cat.body}}"
-
+    <catz-cat id="post" title="{{editablePost.title}}" img-src="{{editablePost.imgSrc}}"
               user="[[user]]"
               editable></catz-cat>
     <div class="controls">
@@ -99,7 +98,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           is: 'catz-editor',
 
           properties: {
-              post: {
+              editablePost: {
                   type: Object,
                   notify: true
               },
@@ -125,15 +124,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           create: function () {
               this._setOpened(true);
-              this.post = {title: '', body: ''};
+              this.editablePost = {title: '', imgSrc: ''};
               this.transitionInFrom(this.getBoundingClientRect());
           },
 
           save: function () {
+              console.log("save : ",this.editablePost);
               this.close('save');
           },
 
           delete: function () {
+              console.log("delete : ",this.editablePost);
               this.close('delete');
           },
 
@@ -142,6 +143,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   this.__editedElement.style.opacity = 1;
                   this.__editedElement = null;
               }
+              this.post = {title: '', imgSrc: ''};
 
               this.fire('close', detail, {bubbles: false});
               this.transitionOut().then(function () {
