@@ -11,39 +11,110 @@
         background-color: deepskyblue;
       }
 
+      .content {
+        display: block;
+        position: relative;
+        max-width: 900px;
+        margin: 5px auto;
+      }
       app-toolbar {
         height: 120px;
       }
-
-      [condensed-title] {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-image: url('images/logo@0.75x.png');
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-size: 90px;
-        /* The difference in font size is used to calculate the scale of the title in the transition. */
-        font-size: 16px;
+      .card-container {
+        display: inline-block;
+        width: 100%;
+        color: black;
+        text-decoration: none;
       }
 
-      [main-title] {
-        position: absolute;
-        top: -120px;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-image: url('images/logo.png');
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-size: 240px;
-        -webkit-transform-origin: center top !important;
-        transform-origin: center top !important;
-        /* The difference in font size is used to calculate the scale of the title in the transition. */
-        font-size: 32px;
+
+      paper-icon-button {
+        color: lightblue;
       }
+
+      paper-icon-button .liked {
+        color: deepskyblue;
+      }
+
+      paper-card {
+        display: block;
+        margin: 5px;
+        --paper-card-header-image: {
+          height: auto;
+        }
+      }
+
+      paper-card h2 {
+        margin: 4px;
+        font-weight: normal;
+      }
+
+      paper-card p {
+        margin: 4px;
+        color: #999;
+      }
+
+      paper-fab {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        --paper-fab-background: #EF5458;
+        --paper-fab-keyboard-focus-background: #DF4448;
+      }
+
+
+      @media (max-width: 960px) {
+        .content {
+          max-width: 800px;
+        }
+
+        .card-container {
+          width: 50%;
+        }
+      }
+
+      @media (max-width: 719px) {
+        app-toolbar {
+          height: 60px;
+        }
+
+        [condensed-title] {
+          background-image: url('images/logo@0.5x.png');
+          background-size: 60px;
+        }
+
+        [main-title] {
+          top: -60px;
+          background-image: url('images/logo@0.75x.png');
+          background-size: 90px;
+        }
+
+        .content {
+          align-content: center;
+          max-width: 600px;
+        }
+
+        .card-container {
+          width: 100%;
+        }
+
+        .avatar-container {
+          display: inline-block;
+          border: 2px solid cornflowerblue;
+          border-radius: 50%;
+          height: 24px;
+          padding: 2px;
+          width: 24px;
+          margin: 5px auto;
+        }
+
+        .avatar-container .image {
+          background-image: url('images/avartar.jpg');
+          background-size: contain;
+          border-radius: 50%;
+        }
+      }
+
 
       .content {
         display: block;
@@ -52,12 +123,6 @@
         margin: 5px auto;
       }
 
-      .card-container {
-        display: inline-block;
-        width: 33.33%;
-        color: black;
-        text-decoration: none;
-      }
 
       #makeLike {
         color: lightblue;
@@ -88,18 +153,33 @@
 
     <!-- main panel -->
 
-    <paper-card image="{{post.imgSrc}}"
-                id$="[[post.$key]]">
-      <div class="card-content">
-        [[likeCount]]
-        <paper-icon-button id="makeLike" icon="favorite" hidden$="[[isLiked]]" on-tap="makeLike"></paper-icon-button>
-        <paper-icon-button id="makeUnlike"  icon="favorite" hidden$="[[!isLiked]]"  on-tap="makeUnlike"></paper-icon-button>
-        <!--[[isLiked]]-->
-        <h2>{{post.title}}</h2>
-        <p>By
-          <span>{{post.author.name}}</span></p>
-      </div>
-    </paper-card>
+    <!--<firebase-document-->
+    <!--id="document"-->
+    <!--app-name="catz"-->
+    <!--path="/[[post.$key]]"-->
+    <!--log="[[log]]"-->
+    <!--data="[[ddd]]"-->
+    <!--&gt;-->
+    <!--</firebase-document>-->
+
+    <div class="card-container">
+      <paper-card image="{{post.imgSrc}}">
+        <div class="card-content">
+          [[likeCount]]
+          <!--[[post.$key]]-->
+          <!--[[postBack.$key]]-->
+          <!--= /[[post.$key]] ==-->
+          <!--[[ddd]]=-->
+          <paper-icon-button id="makeLike" icon="favorite" hidden$="[[isLiked]]" on-tap="makeLike"></paper-icon-button>
+          <paper-icon-button id="makeUnlike" icon="favorite" hidden$="[[!isLiked]]"
+                             on-tap="makeUnlike"></paper-icon-button>
+          <!--[[isLiked]]-->
+          <h2>{{post.title}}</h2>
+          <p>By
+            <span>{{post.author.name}}</span></p>
+        </div>
+      </paper-card>
+    </div>
 
   </template>
 
@@ -107,40 +187,45 @@
       Polymer({
           is: 'catz-card',
           properties: {
-              user : Object,
-              post : {
+              user: Object,
+              post: {
                   type: Object,
-                  notify:true
+                  notify: true
 
               },
-              likeCount : {
+              likeCount: {
                   type: Number,
-                  computed : 'cmpLike(post)'
+                  computed: 'cmpLike(post)'
 
               },
-              isLiked : {
+              isLiked: {
                   type: Boolean,
-                  computed : 'cmpIsLike(post)'
+                  computed: 'cmpIsLike(post)'
 
-              }
+              },
+              log: {
+                  type: Boolean,
+                  value: true
+
+              },
           },
           cmpLike: function (post) {
-              console.log("cmpLike ",post);
-              if(post.likers){
+              console.log("cmpLike ", post);
+              if (post.likers) {
                   return post.likers.length;
               }
               return 0;
           },
           cmpIsLike: function (post) {
-              console.log("cmpIsLike ",post);
-              if(post.likers){
+              console.log("cmpIsLike ", post);
+              if (post.likers) {
                   return (post.likers.indexOf(this.user.uid) > -1)
               }
               return false;
           },
           makeLike: function () {
               var post = this.post;
-              if(!post.likers){
+              if (!post.likers) {
                   post.likers = [];
               }
               post.likers.push(this.user.uid);

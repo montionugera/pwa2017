@@ -127,7 +127,8 @@
         }
 
         .content {
-          max-width: 400px;
+          align-content: center;
+          max-width: 600px;
         }
 
         .card-container {
@@ -150,6 +151,7 @@
           border-radius: 50%;
         }
       }
+
     </style>
 
     <!-- main panel -->
@@ -173,20 +175,7 @@
 
         <template is="dom-repeat" items="{{posts}}" as="post">
           <!-- No empty text node-->
-          <div class="card-container">
-            <!--<paper-card image="{{post.imgSrc}}"-->
-                        <!--id$="[[post.$key]]">-->
-              <!--<div class="card-content">-->
-
-                <!--1-->
-                <!--<paper-icon-button icon="favorite" on></paper-icon-button>-->
-                <!--<h2>{{post.title}}</h2>-->
-                <!--<p>By-->
-                  <!--<span>{{post.author.name}}</span></p>-->
-              <!--</div>-->
-            <!--</paper-card>-->
             <catz-card post="{{post}}" user="[[user]]"></catz-card>
-          </div>
         </template>
       </div>
 

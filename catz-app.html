@@ -129,12 +129,19 @@
       data="{{editablePost}}">
     </firebase-document>
 
+
     <firebase-query
       id="query"
       app-name="catz"
       path="[[myPostPath]]"
       data="{{posts}}">
     </firebase-query>
+
+    <!--<firebase-document-->
+      <!--id="document"-->
+      <!--app-name="catz"-->
+      <!--path="/-KnTOydPLxqktQJp3Ech">-->
+    <!--</firebase-document>-->
 
     <app-drawer-layout responsive-width="1280px">
 
@@ -148,7 +155,7 @@
             </div>
             <div class="contact-info" style="min-height: 100px;">
               <div class="name"> [[user.displayName]]</div>
-              <div class="email"> [[user.email]]</div>
+              <div class="email"> [[user.email]] </div>
 
             </div>
           </app-header>
@@ -345,7 +352,7 @@
               if (!user) {
                   return ''
               }
-              return '/posts/' + user.uid;
+              return '/posts'; // #/' + user.uid;
           },
           save: function () {
               console.log("save");
