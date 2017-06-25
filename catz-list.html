@@ -175,7 +175,7 @@
 
         <template is="dom-repeat" items="{{posts}}" as="post">
           <!-- No empty text node-->
-            <catz-card post="{{post}}" user="[[user]]"></catz-card>
+          <catz-card post="{{post}}" user="[[user]]"></catz-card>
         </template>
       </div>
 
@@ -192,9 +192,19 @@
   <script>
       Polymer({
           is: 'catz-list',
-          properties: {},
+          properties: {
+              posts: {
+                  type: Object,
+                  observer: 'postsChanged'
+              }
+          },
           create: function () {
               this.fire('create');
+          },
+
+          postsChanged: function (newData, oldData) {
+              // do something when the query returns values
+              console.log("postsChanged sss", newData)
           }
       });
   </script>

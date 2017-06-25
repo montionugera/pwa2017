@@ -210,14 +210,14 @@
               },
           },
           cmpLike: function (post) {
-              console.log("cmpLike ", post);
+//              console.log("cmpLike ", post);
               if (post.likers) {
                   return post.likers.length;
               }
               return 0;
           },
           cmpIsLike: function (post) {
-              console.log("cmpIsLike ", post);
+//              console.log("cmpIsLike ", post);
               if (post.likers) {
                   return (post.likers.indexOf(this.user.uid) > -1)
               }

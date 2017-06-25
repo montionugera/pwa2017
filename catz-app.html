@@ -134,13 +134,14 @@
       id="query"
       app-name="catz"
       path="[[myPostPath]]"
-      data="{{posts}}">
+      data="{{posts}}"
+      data-changed="postsChange">
     </firebase-query>
 
     <!--<firebase-document-->
-      <!--id="document"-->
-      <!--app-name="catz"-->
-      <!--path="/-KnTOydPLxqktQJp3Ech">-->
+    <!--id="document"-->
+    <!--app-name="catz"-->
+    <!--path="/-KnTOydPLxqktQJp3Ech">-->
     <!--</firebase-document>-->
 
     <app-drawer-layout responsive-width="1280px">
@@ -155,7 +156,7 @@
             </div>
             <div class="contact-info" style="min-height: 100px;">
               <div class="name"> [[user.displayName]]</div>
-              <div class="email"> [[user.email]] </div>
+              <div class="email"> [[user.email]]</div>
 
             </div>
           </app-header>
@@ -170,13 +171,13 @@
               <a href="#/home" name="name">Home</a>
             </paper-item>
             <!--<paper-item name="favorites">-->
-              <!--<a href="#/favorites" name="name">Favorites</a>-->
+            <!--<a href="#/favorites" name="name">Favorites</a>-->
             <!--</paper-item>-->
             <!--<paper-item name="saved">-->
-              <!--<a href="#/saved" name="name">Saved</a>-->
+            <!--<a href="#/saved" name="name">Saved</a>-->
             <!--</paper-item>-->
             <!--<paper-item name="trending">-->
-              <!--<a href="#/trending" name="name">Trending</a>-->
+            <!--<a href="#/trending" name="name">Trending</a>-->
             <!--</paper-item>-->
             <paper-item name="logout">
               <a name="name" on-tap="logout">Logout</a>
@@ -200,21 +201,21 @@
         </catz-list>
 
         <!--<catz-list name="favorites"-->
-                   <!--signed-in="[[signedIn]]"-->
-                   <!--online="[[online]]">-->
-          <!--<paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>-->
+        <!--signed-in="[[signedIn]]"-->
+        <!--online="[[online]]">-->
+        <!--<paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>-->
         <!--</catz-list>-->
 
         <!--<catz-list name="saved"-->
-                   <!--signed-in="[[signedIn]]"-->
-                   <!--online="[[online]]">-->
-          <!--<paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>-->
+        <!--signed-in="[[signedIn]]"-->
+        <!--online="[[online]]">-->
+        <!--<paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>-->
         <!--</catz-list>-->
 
         <!--<catz-list name="trending"-->
-                   <!--signed-in="[[signedIn]]"-->
-                   <!--online="[[online]]">-->
-          <!--<paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>-->
+        <!--signed-in="[[signedIn]]"-->
+        <!--online="[[online]]">-->
+        <!--<paper-icon-button icon="app:menu" drawer-toggle slot="drawer-toggle"></paper-icon-button>-->
         <!--</catz-list>-->
 
         <catz-detail
@@ -251,6 +252,14 @@
               myPostPath: {
                   type: String,
                   computed: "cmpPostsPath(user)"
+              },
+              posts: {
+                  type: Object,
+                  observer: 'postsChanged'
+              },
+              orderedPost: {
+                  type: Object,
+                  computed: "cmpOrderedPosts(posts)"
               },
               _idData: Object,
 
@@ -354,6 +363,16 @@
               }
               return '/posts'; // #/' + user.uid;
           },
+
+          postsChanged: function (newData, oldData) {
+              // do something when the query returns values
+//              console.log("postsChanged",newData)
+          },
+
+          cmpOrderedPosts: function (posts) {
+//              console.log("posts ", posts);
+              return posts.reverse()
+          },
           save: function () {
               console.log("save");
               this.editablePost = this.$.editor.editablePost;
@@ -361,7 +380,7 @@
                   (this.editablePost.title &&
                   this.editablePost.imgSrc)) {
                   var user = this.user;
-                  this.editablePost.author = {uid:user.uid ,name:user.displayName,photoUrl:user.photoURL};
+                  this.editablePost.author = {uid: user.uid, name: user.displayName, photoUrl: user.photoURL};
                   return this.$.document.saveValue(this.myPostPath).then(function () {
                       this.$.document.reset();
                   }.bind(this));
